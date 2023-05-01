@@ -36,7 +36,4 @@ class ColorSpaceAttackModel(MMLabModelAdapter):
     def on_predict_epoch_end(self) -> None:
         attack_results = torch.cat(self.predict_attack_outputs)
         attack_acc = attack_results.sum().item() / len(attack_results)
-        self.log_dict(
-            self.flatten_dict({"attack_acc": attack_acc}, "predict"), sync_dist=True
-        )
-        return super().on_predict_epoch_end()
+        print(f"Attack acc: {attack_acc}")
