@@ -6,7 +6,7 @@ import torch
 def fgsm(model, inputs, data_samples, eps):
     inputs.requires_grad = True
     with torch.inference_mode(False):
-        loss, _ = model.parse_loss(model(inputs, data_samples, mode="loss"))
+        loss, _ = model.parse_losses(model(inputs, data_samples, mode="loss"))
     loss.backward()
     perturbed_inputs = torch.clamp(inputs + eps * inputs.grad.sign(), 0, 1)
 
