@@ -10,7 +10,7 @@ class ColorSpaceAttackModel(MMLabModelAdapter):
         predict_tasks=("attack",),
         attack_cfg: dict = {"func": "fgsm", "args": {"eps": 0.05}},
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(predict_tasks=predict_tasks, *args, **kwargs)
         self.attack_cfg = attack_cfg
@@ -21,13 +21,13 @@ class ColorSpaceAttackModel(MMLabModelAdapter):
             [output.gt_label != output.pred_label for output in predict_outputs]
         )
 
-        indices = (~attack_result).nonzero()
+        indices = (~attack_result).nonzero()[:, 0]
 
         res, perturbed_inputs = attack_methods[self.attack_cfg["func"]](
             self.model,
             inputs[indices],
             [predict_outputs[i] for i in indices],
-            **self.attack_cfg["args"]
+            **self.attack_cfg["args"],
         )
         attack_result[indices] = res
 
